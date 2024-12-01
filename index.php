@@ -37,10 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 // Redireccionar según el rol del usuario
                 if ($userFound['nombre_rol'] == 'Administrador') {
-                    header('Location: ./Contadorcito-SA-de-CV/views/users/indexUsers.php');
+                    header('Location: ./Contadorcito-SA-de-CV/views/template/header.php');
                     exit();
                 } elseif ($userFound['nombre_rol'] == 'Auxiliar') {
-                    header('Location: ./Contadorcito-SA-de-CV/views/sales/indexSales.php');
+                    header('Location: ./Contadorcito-SA-de-CV/views/template/header.php');
                     exit();
                 } else {
                     echo "Rol no reconocido: " . $userFound['nombre_rol'] . "<br>";
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <input type="text" class="form-control" required name="user" placeholder="Usuario">
                     </div>
                     <div class="form-group mx-sm-4 pb-4">
-                        <input type="text" class="form-control" required name="pwd" placeholder="Contraseña">
+                        <input type="password" class="form-control" required name="pwd" placeholder="Contraseña">
                     </div>
                     <div class="form-group mx-sm-4 pb-3">
                         <button type="submit" class="btn btn-block ingresar" value="Ingresar">Ingresar</button>
