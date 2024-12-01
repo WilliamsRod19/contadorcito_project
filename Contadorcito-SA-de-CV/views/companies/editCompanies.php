@@ -85,7 +85,45 @@
         </div>
         <div id="layoutSidenav_content">
             <main>
-                
+                <div class="container mt-4">
+                    <h1 class="mb-4">Editar Empresa</h1>
+
+                    <!-- Formulario de Edición de Empresa -->
+                    <form method="POST" action="../../controllers/companies/editCompaniesController.php">
+                        <input type="hidden" name="id" value="<?=($empresa['id']) ?>">
+
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre de la Empresa</label>
+                            <input type="text" name="nombre" id="nombre" class="form-control" value="<?= ($empresa['nombre']) ?>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipo_empresa" class="form-label">Tipo de Empresa</label>
+                            <select name="tipo_empresa_id" id="tipo_empresa" class="form-control" required>
+                                <?php
+                                // Obtener los tipos de empresa desde la base de datos
+                                include '../../controllers/companies/getCompanyType.php';
+                                foreach ($tipos_empresa as $tipo): ?>
+                                    <option value="<?= $tipo['id'] ?>" <?= $tipo['id'] == $empresa['tipo_empresa_id'] ? 'selected' : '' ?>>
+                                        <?= ($tipo['tipo']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" name="direccion" id="direccion" class="form-control" value="<?= ($empresa['direccion'] ?? '') ?>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="text" name="telefono" id="telefono" class="form-control" value="<?=($empresa['telefono'] ?? '') ?>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" name="email" id="email" class="form-control" value="<?=($empresa['email'] ?? '') ?>">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Actualizar Empresa</button>
+                    </form>
+                </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">

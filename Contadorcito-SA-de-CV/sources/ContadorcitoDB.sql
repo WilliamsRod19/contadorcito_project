@@ -1,16 +1,29 @@
 Create database ContadorcitoDB;
 USE ContadorcitoDB;
 
+-- Crear la tabla tbl_TipoEmpresa
+CREATE TABLE tbl_TipoEmpresa (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tipo VARCHAR(50) Not null
+);
+
+-- Insertar los valores únicos para los tipos de empresa
+INSERT INTO tbl_TipoEmpresa (tipo)
+VALUES ('Natural'), ('Jurídica');
+
+-- Crear la tabla tbl_Empresas con la relación a tbl_TipoEmpresa
 CREATE TABLE tbl_Empresas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    tipo ENUM('Natural', 'Jurídica') NOT NULL,
+    tipo_empresa_id INT NOT NULL,
     direccion TEXT,
     telefono VARCHAR(20),
     email VARCHAR(100),
     estado BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (tipo_empresa_id) REFERENCES tbl_TipoEmpresa(id)
 );
+
 
 Create table tbl_Roles (
 	id_rol int auto_increment primary key,
@@ -35,18 +48,29 @@ CREATE TABLE tbl_Usuarios (
 
 INSERT INTO tbl_Usuarios (nombre, email, usuario, clave, id_rol) VALUES 
 ('Josue Montoya', 'admin@gmail.com', 'admin', '$2b$12$/DU5/JfI68JNrFcuY4kmI.kUu5v2tTlWfiCR6bfp7bN7hL0jOXgzy', 1),
-('Williams Rodriguez', 'auxiliar@gmail.com', 'auxiliar', '$2b$12$/DU5/JfI68JNrFcuY4kmI.kUu5v2tTlWfiCR6bfp7bN7hL0jOXgzy', 2),
-('Carlos Guerrero', 'auxiliar2@gmail.com', 'auxiliar2', '$2b$12$/DU5/JfI68JNrFcuY4kmI.kUu5v2tTlWfiCR6bfp7bN7hL0jOXgzy', 2);
+('Williams Gei', 'auxiliar@gmail.com', 'auxiliar', '$2b$12$/DU5/JfI68JNrFcuY4kmI.kUu5v2tTlWfiCR6bfp7bN7hL0jOXgzy', 2),
+('Carlos Gei', 'auxiliar2@gmail.com', 'auxiliar2', '$2b$12$/DU5/JfI68JNrFcuY4kmI.kUu5v2tTlWfiCR6bfp7bN7hL0jOXgzy', 2);
 
 SELECT u.id AS id_usuario, u.nombre, u.usuario, u.clave, r.nombre_rol 
 FROM tbl_Usuarios u 
 INNER JOIN tbl_Roles r ON u.id_rol = r.id_rol 
 WHERE u.usuario = 'admin';
 
+-- Crear la tabla tbl_TipoComprobante
+CREATE TABLE tbl_TipoComprobante (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- Insertar los valores únicos para los tipos de comprobantes
+INSERT INTO tbl_TipoComprobante (nombre)
+VALUES ('Crédito Fiscal'), ('Consumidor Final');
+
+-- Crear la tabla tbl_Comprobantes_Compra sin ENUM y con relación a tbl_TipoComprobante
 CREATE TABLE tbl_Comprobantes_Compra (
     id INT AUTO_INCREMENT PRIMARY KEY,
     empresa_id INT NOT NULL,
-    tipo ENUM('Crédito Fiscal', 'Consumidor Final') NOT NULL,
+    tipo_comprobante_id INT NOT NULL,
     numero VARCHAR(50) NOT NULL,
     fecha DATE NOT NULL,
     monto DECIMAL(10, 2) NOT NULL,
@@ -56,13 +80,15 @@ CREATE TABLE tbl_Comprobantes_Compra (
     usuario_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (empresa_id) REFERENCES tbl_Empresas(id),
-    FOREIGN KEY (usuario_id) REFERENCES tbl_Usuarios(id)
+    FOREIGN KEY (usuario_id) REFERENCES tbl_Usuarios(id),
+    FOREIGN KEY (tipo_comprobante_id) REFERENCES tbl_TipoComprobante(id)
 );
 
+-- Crear la tabla tbl_Comprobantes_Venta sin ENUM y con relación a tbl_TipoComprobante
 CREATE TABLE tbl_Comprobantes_Venta (
     id INT AUTO_INCREMENT PRIMARY KEY,
     empresa_id INT NOT NULL,
-    tipo ENUM('Crédito Fiscal', 'Consumidor Final') NOT NULL,
+    tipo_comprobante_id INT NOT NULL,
     numero VARCHAR(50) NOT NULL,
     fecha DATE NOT NULL,
     monto DECIMAL(10, 2) NOT NULL,
@@ -72,5 +98,6 @@ CREATE TABLE tbl_Comprobantes_Venta (
     usuario_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (empresa_id) REFERENCES tbl_Empresas(id),
-    FOREIGN KEY (usuario_id) REFERENCES tbl_Usuarios(id)
+    FOREIGN KEY (usuario_id) REFERENCES tbl_Usuarios(id),
+    FOREIGN KEY (tipo_comprobante_id) REFERENCES tbl_TipoComprobante(id)
 );

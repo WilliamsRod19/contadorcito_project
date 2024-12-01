@@ -85,7 +85,29 @@
         </div>
         <div id="layoutSidenav_content">
             <main>
-                
+                <div class="container-fluid mt-4 p-5">
+                    <h1 class="mb-4">Eliminar Empresa</h1>
+
+                    <!-- Mensaje de Confirmación -->
+                    <div class="alert alert-warning">
+                        <strong>¡Advertencia!</strong> Estás a punto de eliminar la siguiente empresa:
+                        <ul>
+                            <li><strong>Nombre:</strong> <?= htmlspecialchars($empresa['nombre']) ?></li>
+                            <li><strong>Tipo:</strong> <?= htmlspecialchars($empresa['nombre_tipo_empresa']) ?></li>
+                            <li><strong>Dirección:</strong> <?= htmlspecialchars($empresa['direccion'] ?? 'N/A') ?></li>
+                            <li><strong>Teléfono:</strong> <?= htmlspecialchars($empresa['telefono'] ?? 'N/A') ?></li>
+                            <li><strong>Email:</strong> <?= htmlspecialchars($empresa['email'] ?? 'N/A') ?></li>
+                        </ul>
+                        ¿Estás seguro de que deseas eliminarla? Esta acción no se puede deshacer.
+                    </div>
+
+                    <!-- Formulario de Confirmación de Eliminación -->
+                    <form method="POST" action="../../controllers/companies/deleteCompaniesController.php">
+                        <input type="hidden" name="id" value="<?= $empresa['id'] ?>">
+                        <button type="submit" class="btn btn-danger">Eliminar Empresa</button>
+                        <a href="../../views/companies/indexCompanies.php" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">

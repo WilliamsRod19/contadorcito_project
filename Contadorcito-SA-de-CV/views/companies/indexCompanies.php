@@ -1,4 +1,28 @@
-<?php session_start(); ?>
+<?php
+session_start();
+if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
+    header("Location: ../../index.php");
+    exit();
+}
+?>
+
+<?php if (isset($_SESSION['success'])): ?>
+    <div class="alert alert-success">
+        <?php
+        echo $_SESSION['success'];
+        unset($_SESSION['success']);
+        ?>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error'])): ?>
+    <div class="alert alert-danger">
+        <?php
+        echo $_SESSION['error'];
+        unset($_SESSION['error']);
+        ?>
+    </div>
+<?php endif; ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -49,7 +73,7 @@
                         <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                 <!-- SECCION 1 -->
-                                <a class="nav-link collapsed" href="../companies/indexCompanies.php">
+                                <a class="nav-link collapsed" href="../views/companies/indexcompanies.php" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
                                     Empresas
                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                 </a>
@@ -85,7 +109,65 @@
         </div>
         <div id="layoutSidenav_content">
             <main>
-                
+                <div class="container-fluid mt-4 p-5">
+                    <h1 class="mb-4">Gestión de Empresas</h1>
+
+                    <!-- Botón de Crear Empresa -->
+                    <a href="../companies/addCompanies.php" class="btn btn-success mb-4">
+                        <i class="fas fa-plus"></i> Crear Empresa
+                    </a>
+
+                    <!-- Formulario de Búsqueda -->
+                    <form method="POST" action="" class="mb-4">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Buscar empresa..." value="<?= htmlspecialchars($search ?? '') ?>">
+                            <button type="submit" class="btn btn-primary">Buscar</button>
+                        </div>
+                    </form>
+
+                    <!-- Tabla de Empresas -->
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Dirección</th>
+                                <th>Teléfono</th>
+                                <th>Email</th>
+                                <th>Fecha de Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            include '../../controllers/companies/indexCompaniesController.php'; // Controlador de empresas
+                            foreach ($empresas as $empresa): ?>
+                                <tr>
+                                    <td><?php echo $empresa['id']; ?></td>
+                                    <td><?php echo htmlspecialchars($empresa['nombre']); ?></td>
+                                    <td><?php echo htmlspecialchars($empresa['tipo']); ?></td>
+                                    <td><?php echo htmlspecialchars($empresa['direccion'] ?? 'N/A'); ?></td>
+                                    <td><?php echo htmlspecialchars($empresa['telefono'] ?? 'N/A'); ?></td>
+                                    <td><?php echo htmlspecialchars($empresa['email'] ?? 'N/A'); ?></td>
+                                    <td><?php echo htmlspecialchars($empresa['created_at']); ?></td>
+
+                                    <?php if ($_SESSION["user"] == "Administrador"): ?>
+                                        <td>
+                                            <a href="../../controllers/companies/getCompanyById.php?action=edit&id=<?php echo $empresa['id']; ?>" class="btn btn-primary btn-action">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </a>
+                                            <a href="../../controllers/companies/getCompanyById.php?action=delete&id=<?php echo $empresa['id']; ?>" class="btn btn-danger btn-action" onclick="return confirm('¿Está seguro de eliminar esta empresa?')">
+                                                <i class="fas fa-trash"></i> Eliminar
+                                            </a>
+                                        </td>
+                                    <?php endif; ?>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
