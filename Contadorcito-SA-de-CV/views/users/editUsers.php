@@ -1,28 +1,4 @@
-<?php
-session_start();
-if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
-    header("Location: ../../index.php");
-    exit();
-}
-?>
-
-<?php if (isset($_SESSION['success'])): ?>
-    <div class="alert alert-success">
-        <?php
-        echo $_SESSION['success'];
-        unset($_SESSION['success']);
-        ?>
-    </div>
-<?php endif; ?>
-
-<?php if (isset($_SESSION['error'])): ?>
-    <div class="alert alert-danger">
-        <?php
-        echo $_SESSION['error'];
-        unset($_SESSION['error']);
-        ?>
-    </div>
-<?php endif; ?>
+<?php session_start(); ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -80,18 +56,18 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
 
                                 <?php if ($_SESSION["user"] == "Administrador") { ?>
                                     <!-- SECCION 2 -->
-                                    <a class="nav-link collapsed" href="../users/indexUsers.php">
+                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
                                         Usuarios
                                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                     </a>
                                 <?php }; ?>
                                 <!-- SECCION 3 -->
-                                <a class="nav-link collapsed" href="#">
+                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
                                     Comprobantes de Ventas
                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                 </a>
                                 <!-- SECCION 3 -->
-                                <a class="nav-link collapsed" href="#">
+                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
                                     Comprobante de Compras
                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                 </a>
@@ -107,65 +83,59 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
         </div>
         <div id="layoutSidenav_content">
             <main>
-                <div class="container-fluid mt-4 p-5">
-                    <h1 class="mb-4">Gestión de Empresas</h1>
+                <div class="container mt-4">
+                    <h1 class="mb-4">Editar Usuario</h1>
 
-                    <!-- Botón de Crear Empresa -->
-                    <a href="../companies/addCompanies.php" class="btn btn-success mb-4">
-                        <i class="fas fa-plus"></i> Crear Empresa
-                    </a>
+                    <!-- Formulario de Edición de Usuario -->
+                    <form method="POST" action="../../controllers/users/editUserController.php">
+                        <!-- ID oculto -->
+                        <input type="hidden" name="id" value="<?= ($usuario['id']) ?>">
 
-                    <!-- Formulario de Búsqueda -->
-                    <form method="POST" action="" class="mb-4">
-                        <div class="input-group">
-                            <input type="text" name="search" class="form-control" placeholder="Buscar empresa..." value="<?= htmlspecialchars($search ?? '') ?>">
-                            <button type="submit" class="btn btn-primary">Buscar</button>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre Completo</label>
+                            <input type="text" name="nombre" id="nombre" class="form-control" value="<?= ($usuario['nombre']) ?>" required>
                         </div>
+
+                        <div class="mb-3">
+                            <label for="usuario" class="form-label">Nombre de Usuario</label>
+                            <input type="text" name="usuario" id="usuario" class="form-control" value="<?= ($usuario['usuario']) ?>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Correo Electrónico</label>
+                            <input type="email" name="email" id="email" class="form-control" value="<?= ($usuario['email']) ?>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Nueva Contraseña (Opcional)</label>
+                            <input type="password" name="password" id="password" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="rol" class="form-label">Rol</label>
+                            <select name="rol" id="rol" class="form-control" required>
+                                <?php
+                                // Obtener los roles desde la base de datos
+                                include '../../controllers/users/getRolesType.php';
+                                foreach ($roles as $rol): ?>
+                                    <option value="<?= $rol['id_rol'] ?>" <?= $rol['id_rol'] == $usuario['id_rol'] ? 'selected' : '' ?>>
+                                        <?= ($rol['nombre_rol']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Estado" class="form-label">Estado</label>
+                            <select name="Estado" id="Estado" class="form-control" required>
+                                <option value="1" <?= $usuario['activo'] == 1 ? 'selected' : '' ?>>Activo</option>
+                                <option value="2" <?= $usuario['activo'] == 2 ? 'selected' : '' ?>>Inactivo</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
                     </form>
-
-                    <!-- Tabla de Empresas -->
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Tipo</th>
-                                <th>Dirección</th>
-                                <th>Teléfono</th>
-                                <th>Email</th>
-                                <th>Fecha de Registro</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            include '../../controllers/companies/indexCompaniesController.php'; // Controlador de empresas
-                            foreach ($empresas as $empresa): ?>
-                                <tr>
-                                    <td><?php echo $empresa['id']; ?></td>
-                                    <td><?php echo htmlspecialchars($empresa['nombre']); ?></td>
-                                    <td><?php echo htmlspecialchars($empresa['tipo']); ?></td>
-                                    <td><?php echo htmlspecialchars($empresa['direccion'] ?? 'N/A'); ?></td>
-                                    <td><?php echo htmlspecialchars($empresa['telefono'] ?? 'N/A'); ?></td>
-                                    <td><?php echo htmlspecialchars($empresa['email'] ?? 'N/A'); ?></td>
-                                    <td><?php echo htmlspecialchars($empresa['created_at']); ?></td>
-
-                                    <?php if ($_SESSION["user"] == "Administrador"): ?>
-                                        <td>
-                                            <a href="../../controllers/companies/getCompanyById.php?action=edit&id=<?php echo $empresa['id']; ?>" class="btn btn-primary btn-action">
-                                                <i class="fas fa-edit"></i> Editar
-                                            </a>
-                                            <a href="../../controllers/companies/getCompanyById.php?action=delete&id=<?php echo $empresa['id']; ?>" class="btn btn-danger btn-action" onclick="return confirm('¿Está seguro de eliminar esta empresa?')">
-                                                <i class="fas fa-trash"></i> Eliminar
-                                            </a>
-                                        </td>
-                                    <?php endif; ?>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
                 </div>
-
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">

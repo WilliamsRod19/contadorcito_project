@@ -5,9 +5,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user = isset($_POST['user']) ? $_POST['user'] : "";
     $pwd = isset($_POST['pwd']) ? $_POST['pwd'] : "";
 
-    // Debug: Imprimir valores recibidos
-    echo "Usuario intentando conectar: " . $user . "<br>";
-
     try {
         // Consulta ajustada para las tablas tbl_Usuarios y tbl_Roles
         $query = "
@@ -23,9 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Debug: Verificar si se encontró el usuario
         if ($userFound) {
-            echo "Usuario encontrado en la base de datos<br>";
-            echo "Hash almacenado: " . $userFound["clave"] . "<br>";
-            
             // Debug: Verificar la contraseña
             if (password_verify($pwd, $userFound["clave"])) {
                 echo "Contraseña correcta<br>";

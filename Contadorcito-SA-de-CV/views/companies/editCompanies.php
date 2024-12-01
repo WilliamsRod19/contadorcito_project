@@ -71,8 +71,6 @@
                                     Comprobante de Compras
                                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                 </a>
-
-
                             </nav>
                         </div>
                     </div>
