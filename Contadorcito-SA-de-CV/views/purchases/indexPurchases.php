@@ -107,64 +107,59 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
         </div>
         <div id="layoutSidenav_content">
             <main>
-            <div class="container-fluid mt-4 p-5">
-                <h1 class="mb-4">Gestión de Usuarios</h1>
+                <div class="container-fluid mt-4 p-5">
+                    <h1 class="mb-4">Gestión de Comprobantes de Compra</h1>
 
-                <!-- Botón de Crear Usuario -->
-                <a href="../users/addUsers.php" class="btn btn-success mb-4">
-                    <i class="fas fa-plus"></i> Crear Usuario
-                </a>
+                    <!-- Formulario de Búsqueda -->
+                    <form method="POST" action="" class="mb-4">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Buscar comprobante..." value="<?= htmlspecialchars($search ?? '') ?>">
+                            <button type="submit" class="btn btn-primary">Buscar</button>
+                        </div>
+                    </form>
 
-                <!-- Formulario de Búsqueda -->
-                <form method="POST" action="" class="mb-4">
-                    <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="Buscar usuario..." value="<?= htmlspecialchars($search ?? '') ?>">
-                        <button type="submit" class="btn btn-primary">Buscar</button>
-                    </div>
-                </form>
-
-                <!-- Tabla de Usuarios -->
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Email</th>
-                            <th>Usuario</th>
-                            <th>Estado</th>
-                            <th>rol</th>
-                            <th>Fecha de Registro</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        include '../../controllers/users/indexUsersController.php'; // Controlador de usuarios
-                        foreach ($usuarios as $usuario): ?>
+                    <!-- Tabla de Comprobantes de Compra -->
+                    <table class="table table-bordered">
+                        <thead>
                             <tr>
-                                <td><?php echo $usuario['id']; ?></td>
-                                <td><?php echo htmlspecialchars($usuario['nombre']); ?></td>
-                                <td><?php echo htmlspecialchars($usuario['email']); ?></td>
-                                <td><?php echo htmlspecialchars($usuario['usuario'] ?? 'N/A'); ?></td>
-                                <td><?php echo $usuario['activo'] == 1 ? 'activo' : 'Inactivo'; ?></td>
-                                <td><?php echo htmlspecialchars($usuario['nombre_rol']); ?></td>
-                                <td><?php echo htmlspecialchars($usuario['created_at']); ?></td>
-
-                                <?php if ($_SESSION["user"] == "Administrador"): ?>
-                                    <td>
-                                        <a href="../../controllers/users/getUserById.php?action=edit&id=<?php echo $usuario['id']; ?>" class="btn btn-primary btn-action">
-                                            <i class="fas fa-edit"></i> Editar
-                                        </a>
-                                        <a href="../../controllers/users/getUserById.php?action=delete&id=<?php echo $usuario['id']; ?>" class="btn btn-danger btn-action" onclick="return confirm('¿Está seguro de eliminar este usuario?')">
-                                            <i class="fas fa-trash"></i> Eliminar
-                                        </a>
-                                    </td>
-                                <?php endif; ?>
+                                <th>ID</th>
+                                <th>Nombre Empresa</th>
+                                <th>Tipo de Comprobante</th>
+                                <th>Número</th>
+                                <th>Fecha</th>
+                                <th>Monto</th>
+                                <th>Proveedor</th>
+                                <th>PDF</th>
+                                <th>JSON</th>
+                                <th>Nombre Usuario</th>
+                                <th>Fecha de Registro</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            <?php
+                            include '../../controllers/purchases/indexPurchasesController.php'; // Controlador de compras
+                            foreach ($comprobantes as $comprobante): ?>
+                                <tr>
+                                    <td><?php echo $comprobante['id']; ?></td>
+                                    <td><?php echo htmlspecialchars($comprobante['nombre_empresa']); ?></td>
+                                    <td><?php echo htmlspecialchars($comprobante['nombre_tipoComprobantes']); ?></td>
+                                    <td><?php echo htmlspecialchars($comprobante['numero']); ?></td>
+                                    <td><?php echo htmlspecialchars($comprobante['fecha']); ?></td>
+                                    <td><?php echo htmlspecialchars($comprobante['monto']); ?></td>
+                                    <td><?php echo htmlspecialchars($comprobante['proveedor']); ?></td>
+                                    <td><?php echo htmlspecialchars($comprobante['archivo_pdf']); ?></td>
+                                    <td><?php echo htmlspecialchars($comprobante['archivo_json']); ?></td>
+                                    <!--
+                                    <td><a href="<?php echo htmlspecialchars($comprobante['archivo_pdf']); ?>" target="_blank">Ver PDF</a></td>
+                                    <td><a href="<?php echo htmlspecialchars($comprobante['archivo_json']); ?>" target="_blank">Ver JSON</a></td>
+                                    -->
+                                    <td><?php echo htmlspecialchars($comprobante['nombre_usuario']); ?></td>
+                                    <td><?php echo htmlspecialchars($comprobante['created_at']); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
 
             </main>
             <footer class="py-4 bg-light mt-auto">
