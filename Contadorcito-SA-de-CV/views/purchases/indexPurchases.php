@@ -110,6 +110,13 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
                 <div class="container-fluid mt-4 p-5">
                     <h1 class="mb-4">Gestión de Comprobantes de Compra</h1>
 
+                    <!-- Botón para Agregar Comprobante -->
+                    <div class="mb-4 d-flex justify-content-start">
+                        <a href="../../views/purchases/addPurchase.php" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Agregar Comprobante
+                        </a>
+                    </div>
+
                     <!-- Formulario de Búsqueda -->
                     <form method="POST" action="" class="mb-4">
                         <div class="input-group">
@@ -125,14 +132,14 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
                                 <th>ID</th>
                                 <th>Nombre Empresa</th>
                                 <th>Tipo de Comprobante</th>
-                                <th>Número</th>
+                                <th>N.Comprobante</th>
                                 <th>Fecha</th>
                                 <th>Monto</th>
                                 <th>Proveedor</th>
                                 <th>PDF</th>
                                 <th>JSON</th>
-                                <th>Nombre Usuario</th>
                                 <th>Fecha de Registro</th>
+                                <th>Acciones</th> 
                             </tr>
                         </thead>
                         <tbody>
@@ -143,25 +150,54 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
                                     <td><?php echo $comprobante['id']; ?></td>
                                     <td><?php echo htmlspecialchars($comprobante['nombre_empresa']); ?></td>
                                     <td><?php echo htmlspecialchars($comprobante['nombre_tipoComprobantes']); ?></td>
-                                    <td><?php echo htmlspecialchars($comprobante['numero']); ?></td>
+                                    <td><?php echo htmlspecialchars($comprobante['numero']); ?></td> <!-- Aquí sigue el número del comprobante -->
                                     <td><?php echo htmlspecialchars($comprobante['fecha']); ?></td>
-                                    <td><?php echo htmlspecialchars($comprobante['monto']); ?></td>
+                                    <td>
+                                        <?php
+                                     
+                                        echo "$" . number_format($comprobante['monto'], 2);
+                                        ?>
+                                    </td>
                                     <td><?php echo htmlspecialchars($comprobante['proveedor']); ?></td>
-                                    <td><?php echo htmlspecialchars($comprobante['archivo_pdf']); ?></td>
-                                    <td><?php echo htmlspecialchars($comprobante['archivo_json']); ?></td>
-                                    <!--
-                                    <td><a href="<?php echo htmlspecialchars($comprobante['archivo_pdf']); ?>" target="_blank">Ver PDF</a></td>
-                                    <td><a href="<?php echo htmlspecialchars($comprobante['archivo_json']); ?>" target="_blank">Ver JSON</a></td>
-                                    -->
-                                    <td><?php echo htmlspecialchars($comprobante['nombre_usuario']); ?></td>
+                                    <td>
+                                        <?php if (!empty($comprobante['archivo_pdf'])): ?>
+                                            
+                                            <a href="/../contadorcito_project/Contadorcito-SA-de-CV/uploads/comprobantes/<?php echo basename($comprobante['archivo_pdf']); ?>" target="_blank">
+                                                <?php echo basename($comprobante['archivo_pdf']); ?>
+                                            </a>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if (!empty($comprobante['archivo_json'])): ?>
+                                            
+                                            <a href="/../contadorcito_project/Contadorcito-SA-de-CV/uploads/comprobantes/<?php echo basename($comprobante['archivo_json']); ?>" target="_blank">
+                                                <?php echo basename($comprobante['archivo_json']); ?>
+                                            </a>
+                                        <?php endif; ?>
+                                    </td>
                                     <td><?php echo htmlspecialchars($comprobante['created_at']); ?></td>
+                                    <td>
+                                        <!-- Botón de Editar -->
+                                        <a href="../../controllers/purchases/getPurchaseById.php?id=<?= $comprobante['id'] ?>&action=edit"
+                                            class="btn btn-warning btn-sm">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </a>
+
+                                        <!-- Botón de Eliminar -->
+                                        <a href="../../controllers/purchases/getPurchaseById.php?id=<?= $comprobante['id'] ?>&action=delete"
+                                            class="btn btn-danger btn-sm"
+                                            onclick="return confirm('¿Estás seguro de eliminar este comprobante?')">
+                                            <i class="fas fa-trash-alt"></i> Eliminar
+                                        </a>
+                                    </td>
                                 </tr>
+
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
-
             </main>
+
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">

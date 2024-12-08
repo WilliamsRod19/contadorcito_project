@@ -24,6 +24,21 @@ CREATE TABLE tbl_Empresas (
     FOREIGN KEY (tipo_empresa_id) REFERENCES tbl_TipoEmpresa(id)
 );
 
+INSERT INTO tbl_Empresas 
+(nombre, tipo_empresa_id, direccion, telefono, email)
+VALUES
+('Empresa Alpha', 1, 'Av. Principal 123, Ciudad Central', '555-1234', 'contacto@empresaalpha.com'),
+('Empresa Beta', 2, 'Calle Secundaria 456, Zona Industrial', '555-5678', 'info@empresabeta.com'),
+('Empresa Gamma', 1, 'Blvd. Empresarial 789, Centro Corporativo', '555-9876', 'soporte@empresagamma.com'),
+('Empresa Delta', 2, 'Parque Empresarial 321, Ciudad Nueva', '555-6543', 'ventas@empresadelta.com'),
+('Empresa Epsilon', 1, 'Av. Tecnológica 111, Edificio 5', '555-7890', 'admin@empresaepsilon.com'),
+('Empresa Zeta', 2, 'Calle Innovación 222, Torre Norte', '555-4321', 'gerencia@empresazeta.com'),
+('Empresa Eta', 1, 'Zona Franca 333, Edificio Logístico', '555-3456', 'logistica@empresaeta.com'),
+('Empresa Theta', 2, 'Parque Industrial 444, Planta Baja', '555-6789', 'contacto@empresatheta.com'),
+('Empresa Iota', 1, 'Av. Comercial 555, Local 10', '555-9012', 'consultas@empresaiota.com'),
+('Empresa Kappa', 2, 'Blvd. Tecnológico 666, Piso 2', '555-2345', 'info@empresakappa.com');
+
+
 
 Create table tbl_Roles (
 	id_rol int auto_increment primary key,
@@ -51,10 +66,7 @@ INSERT INTO tbl_Usuarios (nombre, email, usuario, clave, id_rol) VALUES
 ('Williams Gei', 'auxiliar@gmail.com', 'auxiliar', '$2b$12$/DU5/JfI68JNrFcuY4kmI.kUu5v2tTlWfiCR6bfp7bN7hL0jOXgzy', 2),
 ('Carlos Gei', 'auxiliar2@gmail.com', 'auxiliar2', '$2b$12$/DU5/JfI68JNrFcuY4kmI.kUu5v2tTlWfiCR6bfp7bN7hL0jOXgzy', 2);
 
-SELECT u.id AS id_usuario, u.nombre, u.usuario, u.clave, r.nombre_rol 
-FROM tbl_Usuarios u 
-INNER JOIN tbl_Roles r ON u.id_rol = r.id_rol 
-WHERE u.usuario = 'admin';
+select * from tbl_Comprobantes_Compra;
 
 -- Crear la tabla tbl_TipoComprobante
 CREATE TABLE tbl_TipoComprobante (
@@ -77,10 +89,8 @@ CREATE TABLE tbl_Comprobantes_Compra (
     proveedor VARCHAR(100) NOT NULL,
     archivo_pdf VARCHAR(255),
     archivo_json VARCHAR(255),
-    usuario_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (empresa_id) REFERENCES tbl_Empresas(id),
-    FOREIGN KEY (usuario_id) REFERENCES tbl_Usuarios(id),
     FOREIGN KEY (tipo_comprobante_id) REFERENCES tbl_TipoComprobante(id)
 );
 
@@ -95,9 +105,7 @@ CREATE TABLE tbl_Comprobantes_Venta (
     cliente VARCHAR(100) NOT NULL,
     archivo_pdf VARCHAR(255),
     archivo_json VARCHAR(255),
-    usuario_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (empresa_id) REFERENCES tbl_Empresas(id),
-    FOREIGN KEY (usuario_id) REFERENCES tbl_Usuarios(id),
     FOREIGN KEY (tipo_comprobante_id) REFERENCES tbl_TipoComprobante(id)
 );
