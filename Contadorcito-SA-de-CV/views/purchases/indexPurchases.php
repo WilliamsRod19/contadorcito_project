@@ -227,42 +227,6 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-    <!--
-    <script>
-        $(document).ready(function() {
-            $("#purchasesTable").DataTable({
-                dom: 'Bfrtip',
-                buttons: [{
-                        extend: 'csv',
-                        exportOptions: {
-                            columns: ':not(:last-child)'
-                        }
-                    },
-                    {
-                        extend: 'pdf',
-                        exportOptions: {
-                            columns: ':not(:last-child)'
-                        }
-                    },
-                    {
-                        extend: 'excel',
-                        exportOptions: {
-                            columns: ':not(:last-child)'
-                        }
-                    }
-                ],
-                columnDefs: [{
-                    targets: <?php echo ($_SESSION["user"] == "administrator") ? 11 : 10; ?>,
-                    orderable: false,
-                    searchable: false
-                }],
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
-                }
-            });
-        });
-    </script>
-    -->
 
     <script>
         // Add date range filter for sales table
