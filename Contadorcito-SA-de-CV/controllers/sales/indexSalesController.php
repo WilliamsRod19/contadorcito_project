@@ -11,11 +11,10 @@ include '../../config/conf.php';
 // Consulta SQL para obtener los comprobantes de venta con sus relaciones
 $sql = "SELECT cv.id, emp.nombre AS empresa_nombre, tc.nombre AS tipo_comprobante, 
                cv.numero, cv.fecha, cv.monto, cv.cliente, cv.archivo_pdf, cv.archivo_json, 
-               usr.nombre AS nombre_usuario, cv.created_at
+               cv.created_at
         FROM tbl_Comprobantes_Venta cv
         INNER JOIN tbl_Empresas emp ON cv.empresa_id = emp.id
         INNER JOIN tbl_TipoComprobante tc ON cv.tipo_comprobante_id = tc.id
-        INNER JOIN tbl_Usuarios usr ON cv.usuario_id = usr.id
         ORDER BY cv.id ASC";
 
 // Agregar condiciones de búsqueda si se proporcionó un término

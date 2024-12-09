@@ -1,28 +1,4 @@
-<?php
-session_start();
-if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
-    header("Location: ../../index.php");
-    exit();
-}
-?>
-
-<?php if (isset($_SESSION['success'])): ?>
-    <div class="alert alert-success">
-        <?php
-        echo $_SESSION['success'];
-        unset($_SESSION['success']);
-        ?>
-    </div>
-<?php endif; ?>
-
-<?php if (isset($_SESSION['error'])): ?>
-    <div class="alert alert-danger">
-        <?php
-        echo $_SESSION['error'];
-        unset($_SESSION['error']);
-        ?>
-    </div>
-<?php endif; ?>
+<?php session_start(); ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -47,7 +23,7 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-            <!--VACIO--->
+            <!--VACIO---> 
         </form>
         <!-- Navbar-->
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
@@ -107,88 +83,48 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
         </div>
         <div id="layoutSidenav_content">
             <main>
-            <div class="container-fluid mt-4 p-5">
-                    <h1 class="mb-4">Gestión de Comprobantes de Venta</h1>
+                <div class="container mt-4">
+                    <h2>¿Estás seguro de eliminar este comprobante de venta?</h2>
 
-                    <!-- Botón para Agregar Comprobante -->
-                    <div class="mb-4 d-flex justify-content-start">
-                        <a href="../../views/sales/addSales.php" class="btn btn-success">
-                            <i class="fas fa-plus"></i> Agregar Comprobante
-                        </a>
-                    </div>
+                    <p><strong>Comprobante:</strong> <?= htmlspecialchars($comprobante['numero']) ?></p>
+                    <p><strong>Tipo de Comprobante:</strong> <?= htmlspecialchars($comprobante['nombre_tipo_comprobante']) ?></p>
+                    <p><strong>Empresa:</strong> <?= htmlspecialchars($comprobante['nombre_empresa']) ?></p>
 
-                    <!-- Formulario de Búsqueda -->
-                    <form method="POST" action="" class="mb-4">
-                        <div class="input-group">
-                            <input type="text" name="search" class="form-control" placeholder="Buscar comprobante..." value="<?= htmlspecialchars($search ?? '') ?>">
-                            <button type="submit" class="btn btn-primary">Buscar</button>
+                    <p><strong>Archivos asociados:</strong></p>
+                    <ul>
+                        <?php if (!empty($comprobante['archivo_pdf'])): ?>
+                            <!-- Mostrar solo el nombre del archivo PDF -->
+                            <li>
+                                <a href="../../uploads/comprobantes/<?= htmlspecialchars(basename($comprobante['archivo_pdf'])) ?>" target="_blank">
+                                    <?= htmlspecialchars(basename($comprobante['archivo_pdf'])) ?>
+                                </a>
+                            </li>
+                        <?php else: ?>
+                            <li>No hay archivo PDF asociado.</li>
+                        <?php endif; ?>
+
+                        <?php if (!empty($comprobante['archivo_json'])): ?>
+                            <!-- Mostrar solo el nombre del archivo JSON -->
+                            <li>
+                                <a href="../../uploads/comprobantes/<?= htmlspecialchars(basename($comprobante['archivo_json'])) ?>" target="_blank">
+                                    <?= htmlspecialchars(basename($comprobante['archivo_json'])) ?>
+                                </a>
+                            </li>
+                        <?php else: ?>
+                            <li>No hay archivo JSON asociado.</li>
+                        <?php endif; ?>
+                    </ul>
+
+                    <form action="../../controllers/sales/deleteSalesController.php" method="GET">
+                        <input type="hidden" name="id" value="<?= htmlspecialchars($comprobante['id']) ?>">
+                        <input type="hidden" name="action" value="delete">
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                            <a href="../../views/sales/indexSales.php" class="btn btn-secondary">Cancelar</a>
                         </div>
                     </form>
-
-                    <!-- Tabla de Comprobantes de Venta -->
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre de Empresa</th>
-                                <th>Tipo de Comprobante</th>
-                                <th>Número</th>
-                                <th>Fecha</th>
-                                <th>Monto</th>
-                                <th>Cliente</th>
-                                <th>Archivo PDF</th>
-                                <th>Archivo JSON</th>
-                                <th>Fecha de Registro</th>
-                                <th>Acciones</th> 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            include '../../controllers/sales/indexSalesController.php';
-                            foreach ($comprobantes as $comprobante): ?>
-                                <tr>
-                                    <td><?php echo $comprobante['id']; ?></td>
-                                    <td><?php echo htmlspecialchars($comprobante['empresa_nombre']); ?></td>
-                                    <td><?php echo htmlspecialchars($comprobante['tipo_comprobante']); ?></td>
-                                    <td><?php echo htmlspecialchars($comprobante['numero']); ?></td>
-                                    <td><?php echo htmlspecialchars($comprobante['fecha']); ?></td>
-                                    <td><?php echo htmlspecialchars($comprobante['monto']); ?></td>
-                                    <td><?php echo htmlspecialchars($comprobante['cliente']); ?></td>                                    
-                                    <td>
-                                        <?php if ($comprobante['archivo_pdf']): ?>
-                                            <a href="<?= htmlspecialchars($comprobante['archivo_pdf']); ?>" target="_blank">Ver PDF</a>
-                                        <?php else: ?>
-                                            No disponible
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <?php if ($comprobante['archivo_json']): ?>
-                                            <a href="<?= htmlspecialchars($comprobante['archivo_json']); ?>" target="_blank">Ver JSON</a>
-                                        <?php else: ?>
-                                            No disponible
-                                        <?php endif; ?>
-                                    </td>
-                                        
-                                    <td><?php echo htmlspecialchars($comprobante['created_at']); ?></td>
-                                    <td>
-                                        <!-- Botón de Editar -->
-                                        <a href="../../controllers/sales/getSaleById.php?id=<?= $comprobante['id'] ?>&action=edit"
-                                            class="btn btn-warning btn-sm">
-                                            <i class="fas fa-edit"></i> Editar
-                                        </a>
-
-                                        <!-- Botón de Eliminar -->
-                                        <a href="../../controllers/sales/getSaleById.php?id=<?= $comprobante['id'] ?>&action=delete"
-                                            class="btn btn-danger btn-sm"
-                                            onclick="return confirm('¿Estás seguro de eliminar este comprobante?')">
-                                            <i class="fas fa-trash-alt"></i> Eliminar
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
                 </div>
+
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">

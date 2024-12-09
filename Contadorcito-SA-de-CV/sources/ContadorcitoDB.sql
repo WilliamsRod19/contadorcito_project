@@ -63,10 +63,8 @@ CREATE TABLE tbl_Usuarios (
 
 INSERT INTO tbl_Usuarios (nombre, email, usuario, clave, id_rol) VALUES 
 ('Josue Montoya', 'admin@gmail.com', 'admin', '$2b$12$/DU5/JfI68JNrFcuY4kmI.kUu5v2tTlWfiCR6bfp7bN7hL0jOXgzy', 1),
-('Williams Gei', 'auxiliar@gmail.com', 'auxiliar', '$2b$12$/DU5/JfI68JNrFcuY4kmI.kUu5v2tTlWfiCR6bfp7bN7hL0jOXgzy', 2),
-('Carlos Gei', 'auxiliar2@gmail.com', 'auxiliar2', '$2b$12$/DU5/JfI68JNrFcuY4kmI.kUu5v2tTlWfiCR6bfp7bN7hL0jOXgzy', 2);
-
-select * from tbl_Comprobantes_Compra;
+('Williams Rodriguez', 'auxiliar@gmail.com', 'auxiliar', '$2b$12$/DU5/JfI68JNrFcuY4kmI.kUu5v2tTlWfiCR6bfp7bN7hL0jOXgzy', 2),
+('Carlos Guerrero', 'auxiliar2@gmail.com', 'auxiliar2', '$2b$12$/DU5/JfI68JNrFcuY4kmI.kUu5v2tTlWfiCR6bfp7bN7hL0jOXgzy', 2);
 
 -- Crear la tabla tbl_TipoComprobante
 CREATE TABLE tbl_TipoComprobante (
