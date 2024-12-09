@@ -121,7 +121,7 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
                             <i class="fas fa-plus"></i> Agregar Comprobante
                         </a>
                     </div>
-                    
+
                     <!-- Tabla de Comprobantes de Compra -->
                     <table class="table table-bordered" id="purchasesTable">
                         <thead>
@@ -227,6 +227,7 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <!--
     <script>
         $(document).ready(function() {
             $("#purchasesTable").DataTable({
@@ -260,6 +261,112 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
                 }
             });
         });
+    </script>
+    -->
+
+    <script>
+        // Add date range filter for sales table
+        function addDateRangeFilter() {
+            // Create date filter container
+            const filterContainer = document.createElement('div');
+            filterContainer.innerHTML = `
+                <div class="container-fluid">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="min-date" class="form-label fw-bold">Fecha Inicial:</label>
+                            <input type="date" id="min-date" class="form-control ">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="max-date" class="form-label fw-bold">Fecha Final:</label>
+                            <input type="date" id="max-date" class="form-control ">
+                        </div>
+                    </div>
+                </div>
+            `;
+
+
+            // Insert the filter container before the table
+            const tableContainer = document.querySelector('#purchasesTable');
+            tableContainer.parentNode.insertBefore(filterContainer, tableContainer);
+
+            // Initialize DataTable with date range filtering
+            const table = $("#purchasesTable").DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    }
+                ],
+                columnDefs: [{
+                    targets: <?php echo ($_SESSION["user"] == "administrator") ? 11 : 10; ?>,
+                    orderable: false,
+                    searchable: false
+                }],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+                }
+            });
+
+            // Custom date range filtering for the Date (Fecha) column
+            $.fn.dataTable.ext.search.push(
+                function(settings, data, dataIndex) {
+                    const minDateStr = document.getElementById('min-date').value;
+                    const maxDateStr = document.getElementById('max-date').value;
+                    
+                    // Index of the date column (adjust if needed, in this case it's the 4th column - index 4)
+                    const dateColumnIndex = 4; 
+                    const rowDate = data[dateColumnIndex];
+
+                    // If no date range is set, show all rows
+                    if (!minDateStr && !maxDateStr) {
+                        return true;
+                    }
+
+                    // Parse dates
+                    const rowDateTime = new Date(rowDate).getTime();
+                    const minDateTime = minDateStr ? new Date(minDateStr).getTime() : null;
+                    const maxDateTime = maxDateStr ? new Date(maxDateStr).getTime() : null;
+
+                    // Filtering logic
+                    if (minDateTime && maxDateTime) {
+                        return rowDateTime >= minDateTime && rowDateTime <= maxDateTime;
+                    } else if (minDateTime) {
+                        return rowDateTime >= minDateTime;
+                    } else if (maxDateTime) {
+                        return rowDateTime <= maxDateTime;
+                    }
+
+                    return true;
+                }
+            );
+
+            // Trigger filtering when date inputs change
+            document.getElementById('min-date').addEventListener('change', function() {
+                table.draw();
+            });
+
+            document.getElementById('max-date').addEventListener('change', function() {
+                table.draw();
+            });
+        }
+
+        // Call the function when the document is ready
+        document.addEventListener('DOMContentLoaded', addDateRangeFilter);
     </script>
 
 </body>
