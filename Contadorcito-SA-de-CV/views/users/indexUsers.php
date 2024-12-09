@@ -1,7 +1,7 @@
 <?php
 session_start();
 if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
-    header("Location: ../../index.php");
+    header("Location: ../../../index.php");
     exit();
 }
 ?>
@@ -178,7 +178,7 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
             </footer>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    
     <script src="../../js/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
     <script src="../../assets/demo/chart-area-demo.js"></script>
@@ -220,7 +220,7 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
                     }
                 ],
                 columnDefs: [{
-                    targets: <?php echo ($_SESSION["user"] == "administrator") ? 8 : 7; ?>,
+                    targets: <?php echo ($_SESSION["user"] == "Administrador") ? 7 : 6; ?>,
                     orderable: false,
                     searchable: false
                 }],

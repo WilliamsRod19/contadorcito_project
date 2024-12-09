@@ -1,7 +1,7 @@
 <?php
 session_start();
-if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
-    header("Location: ../../index.php");
+if ($_SESSION['user'] == "") {
+    header("Location: ../../../index.php");
     exit();
 }
 ?>
@@ -131,7 +131,9 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
                                 <th>Teléfono</th>
                                 <th>Email</th>
                                 <th>Fecha de Registro</th>
-                                <th>Acciones</th>
+                                <?php if ($_SESSION["user"] == "Administrador"): ?>
+                                    <th>Acciones</th> 
+                                <?php endif; ?>
                             </tr>
                         </thead>
                         <tbody>
@@ -146,7 +148,6 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
                                     <td><?php echo htmlspecialchars($empresa['telefono'] ?? 'N/A'); ?></td>
                                     <td><?php echo htmlspecialchars($empresa['email'] ?? 'N/A'); ?></td>
                                     <td><?php echo htmlspecialchars($empresa['created_at']); ?></td>
-
                                     <?php if ($_SESSION["user"] == "Administrador"): ?>
                                         <td>
                                             <a href="../../controllers/companies/getCompanyById.php?action=edit&id=<?php echo $empresa['id']; ?>" class="btn btn-primary btn-action">
@@ -178,7 +179,7 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
             </footer>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    
     <script src="../../js/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
     <script src="../../assets/demo/chart-area-demo.js"></script>
@@ -220,7 +221,7 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
                     }
                 ],
                 columnDefs: [{
-                    targets: <?php echo ($_SESSION["user"] == "administrator") ? 8 : 7; ?>,
+                    targets: <?php echo ($_SESSION["user"] == "Administrador") ? 7 : 6; ?>,
                     orderable: false,
                     searchable: false
                 }],
