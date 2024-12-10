@@ -131,7 +131,7 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
                     </form>
 
                     <!-- Tabla de Comprobantes de Venta -->
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="salesTable">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -251,11 +251,11 @@ if ($_SESSION['user'] == "" || $_SESSION['user'] != "Administrador") {
 
 
             // Insert the filter container before the table
-            const tableContainer = document.querySelector('#purchasesTable');
+            const tableContainer = document.querySelector('#salesTable');
             tableContainer.parentNode.insertBefore(filterContainer, tableContainer);
 
             // Initialize DataTable with date range filtering
-            const table = $("#purchasesTable").DataTable({
+            const table = $("#salesTable").DataTable({
                 dom: 'Bfrtip',
                 buttons: [
                     {
