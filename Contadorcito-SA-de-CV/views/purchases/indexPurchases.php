@@ -264,7 +264,10 @@ if ($_SESSION['user'] == "") {
                         }
                     },
                     {
-                        extend: 'pdf',
+                        extend: 'pdfHtml5', 
+                        orientation: 'landscape', 
+                        pageSize: 'A4',
+                        title: 'Reporte de Compras',
                         exportOptions: {
                             columns: ':not(:last-child)'
                         }
